@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
 ## Our Members
 
-- Gloria Natasya Irene Sidebang - 130121xxxx
-- Bintang FJM Sujono - 130121xxxx
+- Gloria Natasya Irene Sidebang - 1301213445
+- Bintang FJM Sujono - 1301213531
 - Nizam Abdullah - 1301213232
 

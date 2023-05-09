@@ -95,3 +95,6 @@ class Server:
         """Make a redirect to path argument"""
         headers.update({'Location': path})
         return self.make_headers(302, "Found", headers=headers)
+    
+    def render_file(self, path):
+        return self.make_response(self.read_file(path))
