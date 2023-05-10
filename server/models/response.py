@@ -44,6 +44,7 @@ class Response:
         
     def error_response(self, code, message):
         body = f'<h1>{code} {message}</h1>'.encode()
+        self.send_header('Content-Type', 'text/html')
         return self.send_response(body, code=code, message=message)
     
     def render_file(self, path):
