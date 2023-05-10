@@ -17,13 +17,9 @@ class Response:
    
     def send_header(self, keyword: str, value: str):
         """Add header to headers buffer"""
-        if not hasattr(self, '_headers_dict'):
-            self._headers_dict = []
         self._headers_dict.append(f'{keyword}: {value}'.encode())
     
     def flush_headers(self):
-        if not hasattr(self, '_headers_buffer'):
-            self._headers_dict = []
         self._headers_buffer = b'\r\n'.join(self._headers_dict) + b'\r\n\r\n'
         self._headers_dict = []
 
