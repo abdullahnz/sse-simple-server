@@ -1,7 +1,6 @@
 # SSE Web Server
 
-Simple Safe Exam (SSE) Web Server is a simple web server implementation of **TCP Socket** written in python required for final presentation of **network computer practicum** courses. This server only accepts clients to access with a specific browser applications. In additional info, for now SSE Web Server just authorize **Chrome** browser to access.
-
+Simple Safe Exam (SSE) Web Server is a simple web server implementation of **TCP Socket** written in python required for final presentation of **network computer practicum** courses. This server only accepts clients to access with a specific browser applications. As additional info, for now SSE Web Server only authorizes browsers that use the **Chromium** browser engine to be able to access it.
 ## Basic Template Usage
 
 Here is simple basic template for implementing this socket server, or you can see main.py for the example.

@@ -1,7 +1,6 @@
-import socket, os, re
 from .models.request import Request
-
-SERVER_NAME = 'XYZ Server'
+from .models.response import Response
+import threading, socket, os, re
 
 class Server:
     def __init__(self, host, port, root_dir = './'):
@@ -24,77 +23,55 @@ class Server:
 
         while True:
             client_sock, client_addr = self.server.accept()
-            with client_sock:
-                try:
-                    client_request = client_sock.recv(self.max_recv).decode()
-                    if client_request:
-                        response = self.handle_request(client_addr, client_request)
-                except Exception as e:
-                    response = self.error_response(500, "Internal Server Error")
-                
-                client_sock.sendall(response)
+            threading.Thread(
+                target=self.handle_connection, 
+                args=(client_sock, client_addr)
+            ).start()
     
+    def handle_connection(self, client_sock, client_addr):
+        """Client connection's handler"""
+        with client_sock:
+            client_request = client_sock.recv(self.max_recv).decode()
+            if client_request:
+                client_sock.sendall(
+                    self.handle_request(client_addr, client_request)
+                )
+                
     def add_route(self, path, handler):
         """Add custom route and handler"""
         self.routes[path] = handler
 
-    def handle_request(self, addr, request):
+    def handle_request(self, addr, request, response = Response()):
         """Handling request data from client"""
         request = Request(request)
         
         print(f"{addr}: {request.method=}, {request.path=}")
         
-        chrome_regex = r'^(?!.*Edge).*Chrome'
-        if not re.match(chrome_regex, request.headers.get('User-Agent')):
-            return self.error_response(403, "Forbidden")
+        try:
+            chrome_reg = r'^(?!.*Edge).*Chrome'
+            client_browser = request.headers.get('User-Agent') or ''
+            
+            if not re.match(chrome_reg, client_browser):
+                return response.error_response(403, "Forbidden")
+            
+            callback = self.routes.get(request.path)
+            
+            if callback:
+                handler_method = 'do_' + request.method
+                if hasattr(callback, handler_method):
+                    return getattr(callback, handler_method)(self, request, response)
+                return response.error_response(405, "Method not Allowed")
+            
+            if request.path == '/':
+                request.path = '/index.html'
+            
+            request.path = self.root_dir + request.path
+            
+            if os.path.isfile(request.path):
+                return response.render_file(request.path)
+            
+            return response.error_response(404, "File Not Found")
+            
+        except Exception as e:
+            return response.error_response(500, "Internal Server Error")
         
-        callback = self.routes.get(request.path)
-        if callback:
-            handler_method = 'do_' + request.method
-            if hasattr(callback, handler_method):
-                return getattr(callback, handler_method)(self, request)
-            return self.error_response(405, "Method not Allowed")
-        
-        if request.path == '/':
-            request.path = '/index.html'
-        
-        request.path = self.root_dir + request.path
-        if os.path.isfile(request.path):
-            return self.make_response(self.read_file(request.path))
-        return self.error_response(404, "File Not Found")
-        
-    def read_file(self, filename):
-        """Read data from file"""
-        with open(filename, "rb") as f:
-            return f.read()
-        
-    def make_headers(self, code, message, headers=None):
-        """Add custom header and return the response headers"""
-        response_headers = {
-            'Content-Type': 'text/html',
-            'Server': SERVER_NAME,
-        }
-        if headers:
-            response_headers.update(headers)
-        headers = "\r\n".join([f"{k}: {v}" for k, v in response_headers.items()])
-        headers = f"HTTP/1.1 {code} {message}\r\n{headers}\r\n\r\n"
-        return headers.encode()
-
-    def make_response(self, body, code=200, message="OK", headers=None):
-        """Craft response header and body"""
-        headers = self.make_headers(code, message, headers)
-        response = headers + body
-        return response
-    
-    def error_response(self, code, message):
-        """Make error response as h1 html template"""
-        response = f"<h1>{code} {message}</h1>".encode()
-        return self.make_response(response, code, message)
-    
-    def redirect(self, path, headers = None):
-        """Make a redirect to path argument"""
-        headers.update({'Location': path})
-        return self.make_headers(302, "Found", headers=headers)
-    
-    def render_file(self, path):
-        return self.make_response(self.read_file(path))
