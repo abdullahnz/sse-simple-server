@@ -8,16 +8,16 @@ Here is simple basic template for implementing this socket server, or you can se
 ```py
 from server import Server
 
-class Home(Server):
-    def do_GET(self, request):
-        return self.make_response(b'Hello, World')
+class HelloWorld(Server):
+    def do_GET(self, req, res):
+        return res.send_response('Hello, World!')
 
-    def do_POST(self, request):
-        return self.redirect('/some_path')
+    def do_POST(self, req, res):
+        return res.render_file('...')
 
 if __name__ == '__main__':
-    server = Server(host='0.0.0.0', port=8080, root_dir="public")
-    server.add_route(path="/", handler=Home)
+    server = Server(host='0.0.0.0', port=8080, root_dir='public')
+    server.add_route(path='/', handler=HelloWorld)
     server.run()
 ```
 
