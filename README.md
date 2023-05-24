@@ -1,6 +1,7 @@
 # SSE Web Server
 
 Simple Safe Exam (SSE) Web Server is a simple web server implementation of **TCP Socket** written in python required for final presentation of **network computer practicum** courses. This server only accepts clients to access with a specific browser applications. As additional info, for now SSE Web Server only authorizes browsers that use the **Chromium** browser engine to be able to access it.
+
 ## Basic Template Usage
 
 Here is simple basic template for implementing this socket server, or you can see main.py for the example.
@@ -20,6 +21,29 @@ if __name__ == '__main__':
     server.add_route(path='/', handler=HelloWorld)
     server.run()
 ```
+
+## Installation
+
+1. Clone this repository and move to folder
+```sh
+git clone https://github.com/abdullahnz/sse-simple-server.git
+```
+
+2. Move to sse-simple-server folder.
+```sh
+cd sse-simple-server
+```
+
+3. Run main.py
+```sh
+python main.py
+```
+
+4. The server will run on the specified server in main.py. You can access the server by visiting `http://IP:PORT` on your browser. Others, just read about using basic templates to create some custom handlers for some routes path.
+
+## Requirements
+
+- python3.x
 
 ## Our Members
 
