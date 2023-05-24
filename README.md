@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
 ## Installation
 
-1. Clone this repository and move to folder
+1. Clone this repository.
 ```sh
 git clone https://github.com/abdullahnz/sse-simple-server.git
 ```
