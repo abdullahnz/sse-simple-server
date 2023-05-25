@@ -19,8 +19,12 @@ class Auth(Server):
         
         return res.redirect(req.path)               # Redirect to /auth path
 
+class MethodNotAllowed:
+    pass
+
 if __name__ == '__main__':
     server = Server(host='0.0.0.0', port=8080, root_dir="public")   # Create server instance with root_dir
     server.add_route(path="/auth", handler=Auth)                    # Add route to server instance with Auth class as handler for /auth path
+    server.add_route(path="/method-not-allowed", handler=MethodNotAllowed)        # Add route to server instance with Auth class as handler for /auth path
     server.run()                                                    # Run server
 

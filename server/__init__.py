@@ -43,14 +43,14 @@ class Server:
         """Add custom route and handler"""
         self.routes[path] = handler         # Add route and handler to routes dict (path as key, handler as value)
 
-    def handle_request(self, addr, request, response = Response()):
+    def handle_request(self, addr, request):
         """Handling request data from client"""
         request = Request(request)                                      # Parse raw request data to Request object
         
         print(f"{addr}: {request.method=}, {request.path=}")            # Display request info to console
         
-        
         try:                                                            # Handling request
+            response = Response()                                       # Create new Response object for every client
             chrome_reg = r'^(?!.*Edge).*Chrome'                         # Regex for chrome browser user agent
             client_browser = request.headers.get('User-Agent') or ''    # Get client browser user agent
             
@@ -75,6 +75,6 @@ class Server:
             
             return response.error_response(404, "File Not Found")   # Return 404 File Not Found
             
-        except Exception as e:                                              # If error occured while handling request
+        except Exception:                                                   # If error occured while handling request
             return response.error_response(500, "Internal Server Error")    # Return 500 Internal Server Error 
         

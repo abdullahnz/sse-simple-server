@@ -39,9 +39,10 @@ class Response:
         return self._response_buffer + self._headers_buffer + self._body_buffer      # Return all response buffer 
         
     def error_response(self, code, message):
-        body = f'<h1>{code} {message}</h1>'.encode()    # Set body to <h1>{code} {message}</h1> as bytes string
-        self.send_header('Content-Type', 'text/html')   # Add Content-Type header to headers buffer
-        return self.send_response(body, code=code, message=message) # Return response buffer with body, code and message
+        error_template = self.read_file('./templates/error.html')           # Read data from templates/error.html
+        body = error_template % (f'{code}'.encode(), message.encode())      # Set body to error_template with code and message
+        self.send_header('Content-Type', 'text/html')                       # Add Content-Type header to headers buffer
+        return self.send_response(body, code=code, message=message)         # Return response buffer with body, code and message
     
     def render_file(self, path):
         self.send_header('Content-Type', self.guess_type(path)) # Add Content-Type header to headers buffer

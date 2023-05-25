@@ -1,19 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>SSE Simple Server</title>
+    <style>
+        body {
+            background: #252525;
+            color: rgb(221, 221, 221);
+            width: 60%;
+            margin: auto;
+        }
+        a {
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>SSE Simple Server</h1>
-    <p>Just a simple <strong>HTTP Server</strong> based on <strong>TCP Socket</strong> python required for final presentation of <strong>network computer practicum</strong> courses.</p>
-    <h2>Our members:</h2>
+    <h1 id="sse-web-server">SSE Web Server</h1>
+    <p>Simple Safe Exam (SSE) Web Server is a simple web server implementation of <strong>TCP Socket</strong> written in
+        python required for final presentation of <strong>network computer practicum</strong> courses. This server only
+        accepts clients to access with a specific browser applications. As additional info, for now SSE Web Server only
+        authorizes browsers that use the <strong>Chromium</strong> browser engine to be able to access it.</p>
+        
+    <h2>Example Demo Page</h2>
+    <p>Here are some examples of display pages.</p>
+    <ol>
+        <li>
+            <p><a href="/spesifikasi.pdf">Open PDF File</a></p>
+        </li>
+        <li>
+            <p><a href="/hello-world.html">Hello World Page</a></p>
+        </li>
+        <li>
+            <p><a href="/auth">Authentication Page</a></p>
+        </li>
+        <li>
+            <p><a href="/404">Error 404 Not Found</a></p>
+        </li>
+        <li>
+            <p><a href="/method-not-allowed">Error 405 Method Not Allowed</a></p>
+        </li>
+    </ol>
+    <h2 id="basic-template-usage">Basic Template Usage</h2>
+    <p>Here is simple basic template for implementing this socket server, or you can see main.py for the example.</p>
+
+    <pre>from server import Server
+
+class HelloWorld(Server):
+    def do_GET(self, req, res):
+        return res.send_response('Hello, World!')
+
+    def do_POST(self, req, res):
+        return res.render_file('...')
+
+if __name__ == '__main__':
+    server = Server(host='0.0.0.0', port=8080, root_dir='public')
+    server.add_route(path='/', handler=HelloWorld)
+    server.run()</pre>
+
+    <h2 id="installation">Installation</h2>
+    <ol>
+        <li>
+            <p>Clone this repository.</p>
+            <pre><code class="lang-sh">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/abdullahnz/sse-simple-server.git
+</code></pre>
+        </li>
+        <li>
+            <p>Move to sse-simple-server folder.</p>
+            <pre><code class="lang-sh">cd sse-simple-<span class="hljs-keyword">server</span>
+</code></pre>
+        </li>
+        <li>
+            <p>Run main.py</p>
+            <pre><code class="lang-sh"><span class="hljs-keyword">python</span> main.<span class="hljs-keyword">py</span>
+</code></pre>
+        </li>
+        <li>
+            <p>You can access the server by visiting
+                <code>http://IP:PORT</code> on your browser. Others, just read about using basic templates to create
+                some custom handlers for some routes path.</p>
+        </li>
+    </ol>
+    
+    <h2 id="our-members">Our Members</h2>
     <ul>
         <li>Gloria Natasya Irene Sidebang - 1301213445</li>
         <li>Bintang FJM Sujono - 1301213531</li>
         <li>Nizam Abdullah - 1301213232</li>
     </ul>
 </body>
+
 </html>
