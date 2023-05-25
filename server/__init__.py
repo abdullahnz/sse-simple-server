@@ -24,10 +24,10 @@ class Server:
 
         # Server's main loop (infinite loop)
         while True:
-            client_sock, client_addr = self.server.accept()     # Establish connection with client. (accept client connection)
+            client_connection = self.server.accept()            # Establish connection with client. (accept client connection)
             threading.Thread(   
                 target=self.handle_connection,                  # Start a new thread for handle client's request by calling
-                args=(client_sock, client_addr)                 # handle_connection method with client_sock and client_addr as arguments
+                args=client_connection                          # handle_connection method with client_sock and client_addr as arguments
             ).start()                                           
     
     def handle_connection(self, client_sock, client_addr):
@@ -63,7 +63,7 @@ class Server:
                 handler_method = 'do_' + request.method                     # Get handler method name
                 if hasattr(callback, handler_method):                       # If handler method is exist in callback
                     return getattr(callback, handler_method)(self, request, response)       # Call handler method with self, request, and response as arguments
-                return response.error_response(405, "Method not Allowed")   # Return 405 Method not Allowed
+                return response.error_response(405, "Method Not Allowed")   # Return 405 Method not Allowed
             
             if request.path == '/':                 # If request path is root path
                 request.path = '/index.html'        # Set request path to index.html (default page)

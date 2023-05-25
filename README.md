@@ -9,7 +9,7 @@ Here is simple basic template for implementing this socket server, or you can se
 ```py
 from server import Server
 
-class HelloWorld(Server):
+class HelloWorld:
     def do_GET(self, req, res):
         return res.send_response('Hello, World!')
 
