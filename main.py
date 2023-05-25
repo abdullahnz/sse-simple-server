@@ -1,6 +1,6 @@
 from server import Server  # Import Server class from server package as a base server class.
 
-class Auth(Server):
+class Auth:
     def do_GET(self, req, res):
         """GET method handler"""
         auth = req.cookies.get('auth')                  # Get auth cookie from request cookies
